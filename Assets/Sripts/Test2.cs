@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test : MonoBehaviour
+public class Test2 : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        //penbis
+        
     }
 
     // Update is called once per frame
