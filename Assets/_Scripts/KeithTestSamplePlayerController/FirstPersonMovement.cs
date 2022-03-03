@@ -10,8 +10,8 @@ public class FirstPersonMovement : MonoBehaviour
 
     private CharacterController characterController;
 
-    /// <summary> Functions to override movement speed. Will use the last added override. </summary>
-    public List<System.Func<float>> speedOverrides = new List<System.Func<float>>();
+    /// <summary> Time modifier expires, speed value. Functions to override movement speed. Will use the last added override. </summary>
+    public List<Vector2> speedOverrides = new List<Vector2>();
 
     private float yVelocity;
     public float targetYVelocity;
@@ -34,10 +34,20 @@ public class FirstPersonMovement : MonoBehaviour
     {
         inputs = new Vector2(inputManager.horizontalMoveAxis, inputManager.verticalMoveAxis);
         yVelocity = targetYVelocity; //this doesn't feel correct in gameplay but makes sense for physics, perfect example of why we're doing custom physics, want austin to tweek this tho
-        Vector3 targetVelocity = transform.right * inputs.x * baseSpeed * Time.deltaTime +
+        UpdateSpeedOverrides();
+        float speed = (speedOverrides.Count > 0) ? speedOverrides[-1].y : baseSpeed;
+        Vector3 targetVelocity = transform.right * inputs.x * speed * Time.deltaTime +
             Vector3.up * yVelocity +
-            transform.forward * inputs.y * baseSpeed * Time.deltaTime;
+            transform.forward * inputs.y * speed * Time.deltaTime;
 
         characterController.Move(targetVelocity);
+    }
+
+    void UpdateSpeedOverrides()
+    {
+        for (int i = 0; i < speedOverrides.Count-1; i++)
+        {
+            if (Time.time > speedOverrides[i].x) speedOverrides.RemoveAt(i);
+        }
     }
 }
